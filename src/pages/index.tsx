@@ -165,7 +165,12 @@ const Home: NextPage = () => {
     setChatResponse(data);
     console.log(data);
   };
-
+  function handleFetchData() {
+    fetchData()
+      .catch((err) => console.error(err))
+      .then(() => console.log("this will succeed"))
+      .catch(() => "obligatory catch");
+  }
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries,
@@ -229,6 +234,12 @@ const Home: NextPage = () => {
     const Objectification = { lat: middleOfArray![0], lng: middleOfArray![1] };
 
     setCenterCoords(Objectification);
+  }
+  function handleCalculateRoute() {
+    calculateRoute()
+      .catch((err) => console.error(err))
+      .then(() => console.log("this will succeed"))
+      .catch(() => "obligatory catch");
   }
   function clearRoute() {
     setDirectionsResponse(null);
@@ -370,7 +381,7 @@ const Home: NextPage = () => {
               <div className="mt-12 flex justify-center gap-2">
                 <button
                   className=" rounded-lg border border-black p-1"
-                  onClick={() => calculateRoute}
+                  onClick={handleCalculateRoute}
                 >
                   Get Directions
                 </button>
@@ -409,7 +420,7 @@ const Home: NextPage = () => {
           <div className="">
             <button
               className="rounded-lg border border-black p-1"
-              onClick={() => fetchData}
+              onClick={handleFetchData}
             >
               Find things to do!
             </button>
