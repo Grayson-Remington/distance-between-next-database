@@ -7,10 +7,10 @@ export default async function handler(
 ) {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: `Can you give me a list of popular things to do at closest incorporated city to these coordinates: ${req.query.lat} ${req.query.lng}?`,
+    prompt: `Can you give me a list of popular things to do at closest incorporated city to these coordinates: ${req.query.lat!.toString()} ${req.query.lng!.toString()}?`,
     temperature: 0,
     max_tokens: 300,
   });
-  const responseText = response.data.choices[0].text;
+  const responseText = response.data.choices[0]!.text;
   res.status(200).json(responseText);
 }

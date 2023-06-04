@@ -102,12 +102,12 @@ const FriendsList = (saved_locations: {
           </h1>
         </div>
 
-        {saved_locations!.saved_locations!.map((saved_location) => (
+        {saved_locations.saved_locations.map((saved_location) => (
           <Saved_LocationView {...saved_location} key={saved_location.id} />
         ))}
       </div>
     );
-  } else return <div>Hello</div>;
+  } else return <div>Login to save locations!</div>;
 };
 const libraries: (
   | "drawing"
@@ -137,7 +137,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (saved_locations) {
-      const data2 = saved_locations!.map((value, index) => {
+      const data2 = saved_locations.map((value, index) => {
         return {
           id: value.saved_location.id,
           createdAt: value.saved_location.createdAt,
@@ -160,7 +160,7 @@ const Home: NextPage = () => {
     const lat = centercoords.lat;
     const lng = centercoords.lng;
     const res = await fetch(`api/ChatGPTRequest?lat=${lat}?lng=${lng}`);
-    const data = await res.json();
+    const data: string = res.json().toString();
     setResponse("loaded");
     setChatResponse(data);
     console.log(data);
@@ -370,7 +370,7 @@ const Home: NextPage = () => {
               <div className="mt-12 flex justify-center gap-2">
                 <button
                   className=" rounded-lg border border-black p-1"
-                  onClick={calculateRoute}
+                  onClick={() => calculateRoute}
                 >
                   Get Directions
                 </button>
@@ -409,7 +409,7 @@ const Home: NextPage = () => {
           <div className="">
             <button
               className="rounded-lg border border-black p-1"
-              onClick={fetchData}
+              onClick={() => fetchData}
             >
               Find things to do!
             </button>
@@ -453,7 +453,7 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
     setValue(description, false);
     clearSuggestions();
 
-    const results = await getGeocode({ address: description });
+    const results = await getGeocode({ address: description }).catch().then();
     const { lat, lng } = getLatLng(results[0]!);
     setSelected({
       description: description,
@@ -473,22 +473,22 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
       const uniqueArray: google.maps.places.AutocompletePrediction[] = [];
       const results = saved_locations?.map((saved_location, index) => {
         return {
-          description: saved_locations![index]!.description,
+          description: saved_locations[index]!.description,
           structured_formatting: {
-            main_text: saved_locations![index]!.name,
-            secondary_text: saved_locations![index]!.main_text,
+            main_text: saved_locations[index]!.name,
+            secondary_text: saved_locations[index]!.main_text,
             main_text_matched_substrings: [{ length: 1, offset: 0 }],
           },
           matched_substrings: [{ length: 0, offset: 0 }],
           terms: [],
           types: [],
-          place_id: saved_locations![index]!.id,
+          place_id: saved_locations[index]!.id,
         };
       });
 
       results.forEach((item, index) => {
         if (!totalData.includes(item)) {
-          uniqueArray.unshift(results![index]!);
+          uniqueArray.unshift(results[index]!);
         }
       });
 
@@ -526,10 +526,13 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
         setOptions(newValue ? [newValue, ...options] : options);
         if (newValue !== null) {
           handleSelect(
-            newValue!.description,
-            newValue!.structured_formatting.main_text,
-            newValue!.structured_formatting.secondary_text
-          );
+            newValue.description,
+            newValue.structured_formatting.main_text,
+            newValue.structured_formatting.secondary_text
+          )
+            .catch((err) => console.error(err))
+            .then(() => console.log("this will succeed"))
+            .catch(() => "obligatory catch");
         }
       }}
       renderInput={(params) => (
