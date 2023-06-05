@@ -160,10 +160,11 @@ const Home: NextPage = () => {
     const lat = centercoords.lat;
     const lng = centercoords.lng;
     const res = await fetch(`api/ChatGPTRequest?lat=${lat}?lng=${lng}`);
-    const data: string = res.json().toString();
+    const data = (await res.json()) as string;
+
     setResponse("loaded");
     setChatResponse(data);
-    console.log(data);
+    console.log(data, "data");
   };
   function handleFetchData() {
     fetchData()
