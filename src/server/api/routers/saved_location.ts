@@ -28,22 +28,25 @@ const ratelimit = new Ratelimit({
 export const saved_locationsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.userId;
-
-    const saved_locations = await ctx.prisma.saved_Location.findMany({
-      where: {
-        userId: {
-          equals: userId!,
+    if (userId) {
+      const saved_locations = await ctx.prisma.saved_Location.findMany({
+        where: {
+          userId: {
+            equals: userId!,
+          },
         },
-      },
-      take: 100,
-      orderBy: [{ createdAt: "desc" }],
-    });
+        take: 100,
+        orderBy: [{ createdAt: "desc" }],
+      });
 
-    return saved_locations.map((saved_location) => {
-      return {
-        saved_location,
-      };
-    });
+      return saved_locations.map((saved_location) => {
+        return {
+          saved_location,
+        };
+      });
+    } else {
+      return null;
+    }
   }),
   create: privateProcedure
     .input(

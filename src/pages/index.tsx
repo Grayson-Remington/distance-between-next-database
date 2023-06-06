@@ -94,6 +94,7 @@ const Saved_LocationView = (props: Saved_Location) => {
 const FriendsList = (saved_locations: {
   saved_locations: Saved_Location[] | null;
 }) => {
+  api.saved_locations.getAll.useQuery();
   if (saved_locations.saved_locations !== null) {
     return (
       <div className="flex flex-col">
@@ -136,16 +137,14 @@ const Home: NextPage = () => {
   const [isAddressSaved, setIsAddressSaved] = useState(false);
   const [isAddressSaved2, setIsAddressSaved2] = useState(false);
   const { mutate: create } = api.saved_locations.create.useMutation();
-  api.saved_locations.getAll.useQuery();
+
   const [friendname, setFriendName] = useState("");
   const [friendname2, setFriendName2] = useState("");
   const [data2, setData2] = useState<Saved_Location[] | null>(null);
-  const { data: saved_locations, isLoading: postsLoading } =
-    api.saved_locations.getAll.useQuery();
-
+  const { data: saved_locations } = api.saved_locations.getAll.useQuery();
   useEffect(() => {
-    if (saved_locations) {
-      const data2 = saved_locations.map((value, index) => {
+    if (isSignedIn && saved_locations) {
+      const data2 = saved_locations!.map((value) => {
         return {
           id: value.saved_location.id,
           createdAt: value.saved_location.createdAt,
@@ -158,11 +157,12 @@ const Home: NextPage = () => {
           lng: value.saved_location.lng,
         };
       });
-      if (saved_locations.length > 0) {
+      if (saved_locations!.length > 0) {
         setData2(data2);
       }
     }
-  }, [saved_locations]);
+    return;
+  }, [saved_locations, isSignedIn]);
 
   const fetchData = async () => {
     if (centercoords) {
@@ -197,12 +197,6 @@ const Home: NextPage = () => {
     lng: number;
   } | null>(null);
 
-  useEffect(() => {
-    if (selected) {
-      setCenterCoords({ lat: selected.lat, lng: selected.lng });
-    }
-  }, [selected]);
-
   const [selected2, setSelected2] = useState<{
     description: string;
     main_text: string;
@@ -211,16 +205,32 @@ const Home: NextPage = () => {
     lng: number;
   } | null>(null);
 
-  useEffect(() => {
-    if (selected2) {
-      setCenterCoords({ lat: selected2.lat, lng: selected2.lng });
-    }
-  }, [selected2]);
-
   const [centercoords, setCenterCoords] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
+  const [middlepoint, setMiddlePoint] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  useEffect(() => {
+    if (selected) {
+      setCenterCoords({ lat: selected.lat, lng: selected.lng });
+      console.log("centercoords", centercoords);
+    }
+  }, [selected]);
+  useEffect(() => {
+    if (selected2) {
+      setCenterCoords({ lat: selected2.lat, lng: selected2.lng });
+      console.log("centercoords", centercoords);
+    }
+  }, [selected2]);
+  useEffect(() => {
+    if (middlepoint) {
+      setCenterCoords({ lat: middlepoint.lat, lng: middlepoint.lng });
+      console.log("centercoords", centercoords);
+    }
+  }, [middlepoint]);
 
   if (!isLoaded) return <div>Loading...</div>;
   const firstOneIndex = chatResponse.search(/1/);
@@ -247,6 +257,7 @@ const Home: NextPage = () => {
     const middleOfArray = LatLngArray[Math.floor(LatLngArray.length / 2)];
     const Objectification = { lat: middleOfArray![0], lng: middleOfArray![1] };
 
+    setMiddlePoint(Objectification);
     setCenterCoords(Objectification);
   }
 
@@ -288,162 +299,204 @@ const Home: NextPage = () => {
           </div>
         )}
       </div>
-      <div className="p-8">
-        <div className="flex h-full w-full flex-wrap items-center justify-center gap-4 bg-slate-300 py-12">
-          <div>
-            <div className="flex flex-col gap-2">
-              <h1 className="py-2">First Location:</h1>
-              <PlacesAutocomplete
-                setSelected={setSelected}
-                saved_locations={data2}
-              />
-              <div>
-                {selected && selected.description !== "" && (
+
+      <div className="flex flex-col items-center gap-4 bg-gradient-to-b from-cyan-500 to-yellow-500 py-20">
+        <div>
+          <div className="flex flex-col gap-2">
+            <h1 className="py-2">First Location:</h1>
+            <PlacesAutocomplete
+              setSelected={setSelected}
+              saved_locations={data2}
+            />
+            <div>
+              {isSignedIn && selected && selected.description !== "" && (
+                <button
+                  className="rounded-lg border border-black p-1"
+                  onClick={() => setIsAddressSaved(true)}
+                >
+                  Save Address
+                </button>
+              )}
+            </div>
+            <div>
+              {selected && isAddressSaved && (
+                <div className="flex w-20 gap-3">
+                  <input
+                    placeholder="Name this location..."
+                    className="grow rounded-lg border border-black bg-transparent outline-none"
+                    type="text"
+                    value={friendname}
+                    onChange={(e) => setFriendName(e.target.value)}
+                  />
                   <button
                     className="rounded-lg border border-black p-1"
-                    onClick={() => setIsAddressSaved(true)}
+                    onClick={() => {
+                      create({
+                        content: {
+                          name: friendname,
+                          description: selected.description,
+                          main_text: selected.main_text,
+                          secondary_text: selected.secondary_text,
+                          lat: selected.lat,
+                          lng: selected.lng,
+                        },
+                      });
+                      setIsAddressSaved(false);
+                    }}
                   >
-                    Save Address
+                    Save
                   </button>
-                )}
-              </div>
-              <div>
-                {selected && isAddressSaved && (
-                  <div className="flex w-20 gap-3">
-                    <input
-                      placeholder="Name this location..."
-                      className="grow rounded-lg border border-black bg-transparent outline-none"
-                      type="text"
-                      value={friendname}
-                      onChange={(e) => setFriendName(e.target.value)}
-                    />
-                    <button
-                      className="rounded-lg border border-black p-1"
-                      onClick={() => {
-                        create({
-                          content: {
-                            name: friendname,
-                            description: selected.description,
-                            main_text: selected.main_text,
-                            secondary_text: selected.secondary_text,
-                            lat: selected.lat,
-                            lng: selected.lng,
-                          },
-                        });
-                        setIsAddressSaved(false);
-                      }}
-                    >
-                      Save
-                    </button>
-                    <button onClick={() => setIsAddressSaved(false)}>
-                      Close
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <h1 className="py-4">Second Location:</h1>
-              <PlacesAutocomplete
-                setSelected={setSelected2}
-                saved_locations={data2}
-              />
-              <div>
-                {selected2 && selected2.description !== "" && (
-                  <button
-                    className="rounded-lg border border-black p-1"
-                    onClick={() => setIsAddressSaved2(true)}
-                  >
-                    Save Address
+                  <button onClick={() => setIsAddressSaved(false)}>
+                    Close
                   </button>
-                )}
-              </div>
-              <div>
-                {selected2 && isAddressSaved2 && (
-                  <div className="flex w-20 gap-3">
-                    <input
-                      placeholder="Name this location..."
-                      className="grow rounded-lg border border-black bg-transparent outline-none"
-                      type="text"
-                      value={friendname2}
-                      onChange={(e) => setFriendName2(e.target.value)}
-                    />
-                    <button
-                      className="rounded-lg border border-black p-1"
-                      onClick={() => {
-                        create({
-                          content: {
-                            name: friendname2,
-                            description: selected2.description,
-                            main_text: selected2.main_text,
-                            secondary_text: selected2.secondary_text,
-                            lat: selected2.lat,
-                            lng: selected2.lng,
-                          },
-                        });
-                        setIsAddressSaved2(false);
-                      }}
-                    >
-                      Save
-                    </button>
-                    <button onClick={() => setIsAddressSaved2(false)}>
-                      Close
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="mt-12 flex justify-center gap-2">
-              <button
-                className=" rounded-lg border border-black p-1"
-                onClick={handleCalculateRoute}
-              >
-                Get Directions
-              </button>
-              <button
-                className="rounded-lg border border-black p-1"
-                onClick={clearRoute}
-              >
-                Clear Directions
-              </button>
+                </div>
+              )}
             </div>
           </div>
-          <div>
-            <GoogleMap
-              zoom={selected || selected2 ? 13 : 3}
-              center={!centercoords ? { lat: 38, lng: -98 } : centercoords}
-              mapContainerClassName="flex lg:w-[500px] lg:h-[500px] w-[400px] h-[400px]"
-              onLoad={(map) => setMap(map)}
-            >
-              {selected && <MarkerF position={selected}>Hello</MarkerF>}
-              {selected2 && <MarkerF position={selected2} />}
-              {centercoords && <MarkerF position={centercoords} />}
-
-              {directionsResponse && (
-                <DirectionsRenderer
-                  directions={directionsResponse}
-                  onLoad={() => console.log("loaded")}
-                  options={{ suppressMarkers: true }}
-                />
+          <div className="flex flex-col gap-2">
+            <h1 className="py-4">Second Location:</h1>
+            <PlacesAutocomplete
+              setSelected={setSelected2}
+              saved_locations={data2}
+            />
+            <div>
+              {isSignedIn && selected2 && selected2.description !== "" && (
+                <button
+                  className="rounded-lg border border-black p-1"
+                  onClick={() => setIsAddressSaved2(true)}
+                >
+                  Save Address
+                </button>
               )}
-            </GoogleMap>
+            </div>
+            <div>
+              {selected2 && isAddressSaved2 && (
+                <div className="flex w-20 gap-3">
+                  <input
+                    placeholder="Name this location..."
+                    className="grow rounded-lg border border-black bg-transparent outline-none"
+                    type="text"
+                    value={friendname2}
+                    onChange={(e) => setFriendName2(e.target.value)}
+                  />
+                  <button
+                    className="rounded-lg border border-black p-1"
+                    onClick={() => {
+                      create({
+                        content: {
+                          name: friendname2,
+                          description: selected2.description,
+                          main_text: selected2.main_text,
+                          secondary_text: selected2.secondary_text,
+                          lat: selected2.lat,
+                          lng: selected2.lng,
+                        },
+                      });
+                      setIsAddressSaved2(false);
+                    }}
+                  >
+                    Save
+                  </button>
+                  <button onClick={() => setIsAddressSaved2(false)}>
+                    Close
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="mt-12 flex justify-center gap-2">
+            <button
+              className=" rounded-lg border border-black bg-green-500 p-1"
+              onClick={handleCalculateRoute}
+            >
+              Get Directions
+            </button>
+            <button
+              className="rounded-lg border border-black bg-red-500 p-1"
+              onClick={clearRoute}
+            >
+              Clear Directions
+            </button>
           </div>
         </div>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col items-center gap-2">
-            <button
-              className="rounded-lg border border-black p-1"
-              onClick={handleFetchData}
-            >
-              Find things to do!
-            </button>
+        <div>
+          <GoogleMap
+            zoom={selected || selected2 ? 13 : 3}
+            center={!centercoords ? { lat: 38, lng: -98 } : centercoords}
+            mapContainerClassName="flex lg:w-[500px] lg:h-[500px] w-[400px] h-[400px]"
+            onLoad={(map) => setMap(map)}
+          >
+            {selected && <MarkerF position={selected}>Hello</MarkerF>}
+            {selected2 && <MarkerF position={selected2} />}
+            {middlepoint && <MarkerF position={middlepoint} />}
 
-            <div>Things to do around the middle point:</div>
+            {directionsResponse && (
+              <DirectionsRenderer
+                directions={directionsResponse}
+                onLoad={() => console.log("loaded")}
+                options={{ suppressMarkers: true }}
+              />
+            )}
+          </GoogleMap>
+        </div>
+        <div className="flex w-full flex-col gap-4">
+          <div className="flex flex-col items-center gap-2">
+            {centercoords &&
+              selected &&
+              centercoords.lat === selected.lat &&
+              centercoords.lng === selected.lng && (
+                <div className="flex flex-col items-center justify-center">
+                  <div>Things to do around the first location:</div>
+                  {response == "" && (
+                    <button
+                      className="rounded-lg border border-black p-1"
+                      onClick={handleFetchData}
+                    >
+                      Find things to do!
+                    </button>
+                  )}
+                </div>
+              )}
+            {centercoords &&
+              selected2 &&
+              centercoords.lat === selected2.lat &&
+              centercoords.lng === selected2.lng && (
+                <div className="flex flex-col items-center justify-center">
+                  <div>Things to do around the second location:</div>
+                  {response == "" && (
+                    <button
+                      className="rounded-lg border border-black p-1"
+                      onClick={handleFetchData}
+                    >
+                      Find things to do!
+                    </button>
+                  )}
+                </div>
+              )}
+            {centercoords &&
+              middlepoint &&
+              centercoords.lat === middlepoint.lat &&
+              centercoords.lng === middlepoint.lng && (
+                <div className="flex flex-col items-center justify-center">
+                  <div>
+                    Things to do around the{" "}
+                    <span className="italic">BETWEEN</span> location:
+                  </div>
+                  {response == "" && (
+                    <button
+                      className="rounded-lg border border-black p-1"
+                      onClick={handleFetchData}
+                    >
+                      Find things to do!
+                    </button>
+                  )}
+                </div>
+              )}
             <div className="flex flex-col">
-              <div className="font-serif">
+              <div className="">
                 {response == "loading" && (
                   <div className="flex flex-col items-center gap-4">
-                    <h1>Fetching ChatGPT Reponse</h1>
+                    <h1>Fetching ChatGPT Response</h1>
                     <LoadingSpinner size={60} />
                   </div>
                 )}
@@ -457,9 +510,7 @@ const Home: NextPage = () => {
               </div>
             </div>
           </div>
-          {saved_locations && userLoaded && (
-            <FriendsList saved_locations={data2} />
-          )}
+          {isSignedIn && <FriendsList saved_locations={data2} />}
         </div>
       </div>
     </>
@@ -526,7 +577,6 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
       });
 
       setTotalData([...data, ...uniqueArray]);
-      console.log(totalData);
     }
     if (!saved_locations) {
       setTotalData([...data]);
