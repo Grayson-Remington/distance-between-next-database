@@ -9,14 +9,6 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-const filterUserForClient = (user: User) => {
-  return {
-    id: user.id,
-    username: user.username,
-    profileImageUrl: user.profileImageUrl,
-  };
-};
-
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 
@@ -36,6 +28,7 @@ const ratelimit = new Ratelimit({
 export const saved_locationsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.userId;
+
     const saved_locations = await ctx.prisma.saved_Location.findMany({
       where: {
         userId: {
