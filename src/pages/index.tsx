@@ -109,7 +109,12 @@ const FriendsList = (saved_locations: {
         ))}
       </div>
     );
-  } else return <div>Login to save locations!</div>;
+  } else
+    return (
+      <div className="flex w-full items-center justify-center">
+        Login to save locations!
+      </div>
+    );
 };
 const libraries: (
   | "drawing"
@@ -407,7 +412,7 @@ const Home: NextPage = () => {
             <GoogleMap
               zoom={selected || selected2 ? 13 : 3}
               center={!centercoords ? { lat: 38, lng: -98 } : centercoords}
-              mapContainerClassName="flex w-[500px] h-[500px]"
+              mapContainerClassName="flex lg:w-[500px] lg:h-[500px] w-[400px] h-[400px]"
               onLoad={(map) => setMap(map)}
             >
               {selected && <MarkerF position={selected}>Hello</MarkerF>}
