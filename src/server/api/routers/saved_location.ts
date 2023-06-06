@@ -32,7 +32,7 @@ export const saved_locationsRouter = createTRPCRouter({
       const saved_locations = await ctx.prisma.saved_Location.findMany({
         where: {
           userId: {
-            equals: userId!,
+            equals: userId,
           },
         },
         take: 100,

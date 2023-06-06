@@ -144,7 +144,7 @@ const Home: NextPage = () => {
   const { data: saved_locations } = api.saved_locations.getAll.useQuery();
   useEffect(() => {
     if (isSignedIn && saved_locations) {
-      const data2 = saved_locations!.map((value) => {
+      const data2 = saved_locations.map((value) => {
         return {
           id: value.saved_location.id,
           createdAt: value.saved_location.createdAt,
@@ -157,7 +157,7 @@ const Home: NextPage = () => {
           lng: value.saved_location.lng,
         };
       });
-      if (saved_locations!.length > 0) {
+      if (saved_locations.length > 0) {
         setData2(data2);
       }
     }
