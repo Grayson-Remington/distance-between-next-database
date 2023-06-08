@@ -300,7 +300,7 @@ const Home: NextPage = () => {
         )}
       </div>
 
-      <div className="flex flex-col items-center gap-4 bg-gradient-to-b from-cyan-500 to-yellow-500 py-20">
+      <div className="flex flex-col items-center gap-4 bg-gradient-to-b from-blue-100 to-white py-20">
         <div>
           <div className="flex flex-col gap-2">
             <h1 className="py-2">First Location:</h1>
@@ -406,13 +406,13 @@ const Home: NextPage = () => {
           </div>
           <div className="mt-12 flex justify-center gap-2">
             <button
-              className=" rounded-lg border border-black bg-green-500 p-1"
+              className=" rounded-lg border border-black bg-green-200 p-1"
               onClick={handleCalculateRoute}
             >
               Get Directions
             </button>
             <button
-              className="rounded-lg border border-black bg-red-500 p-1"
+              className="rounded-lg border border-black bg-red-200 p-1"
               onClick={clearRoute}
             >
               Clear Directions
@@ -423,7 +423,7 @@ const Home: NextPage = () => {
           <GoogleMap
             zoom={selected || selected2 ? 13 : 3}
             center={!centercoords ? { lat: 38, lng: -98 } : centercoords}
-            mapContainerClassName="flex lg:w-[500px] lg:h-[500px] w-[400px] h-[400px]"
+            mapContainerClassName="flex lg:w-[500px] lg:h-[500px] md:w-[400px] md:h-[400px] w-[300px] h-[300px]"
             onLoad={(map) => setMap(map)}
           >
             {selected && <MarkerF position={selected}>Hello</MarkerF>}
