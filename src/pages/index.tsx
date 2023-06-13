@@ -293,7 +293,6 @@ const Home: NextPage = () => {
           <div className="bold uppercase underline">How to use:</div>
           <ol className="flex list-decimal flex-col gap-8 p-4">
             <li>
-              {" "}
               Enter 2 locations (saved locations appear in dropdown. Sign-in to
               save locations.)
             </li>
