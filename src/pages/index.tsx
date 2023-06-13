@@ -297,7 +297,7 @@ const Home: NextPage = () => {
               Enter 2 locations (saved locations appear in dropdown. Sign-in to
               save locations.)
             </li>
-            <li>Click "Find Directions" to find the middle point</li>
+            <li>Click &quot;Find Directions&quot; to find the middle point</li>
             <li>
               Below the map, Ask ChatGPT to find things to do around the
               selected point.
