@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import { api } from "~/utils/api";
 import { SignIn, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
@@ -315,7 +316,12 @@ const Home: NextPage = () => {
 
         <div className="flex gap-4 text-xl uppercase">
           <h1>Distance</h1>
-          <img src="/two_points.png" alt="" className="h-8" />
+          <Image
+            src="/two_points.png"
+            width={30}
+            height={30}
+            alt="distance between"
+          />
           <h1>Between</h1>
         </div>
         {!isSignedIn && (
