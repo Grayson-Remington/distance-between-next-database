@@ -259,7 +259,6 @@ const Home: NextPage = () => {
     const Objectification = { lat: middleOfArray![0], lng: middleOfArray![1] };
 
     setMiddlePoint(Objectification);
-    setCenterCoords(Objectification);
   }
 
   function handleCalculateRoute() {
@@ -442,6 +441,13 @@ const Home: NextPage = () => {
               </div>
             </div>
             <div className="mt-12 flex justify-center gap-2">
+              {centercoords && (
+                <div>
+                  {centercoords.lat}
+                  {centercoords.lng}
+                </div>
+              )}
+
               <button
                 className=" rounded-lg border border-black bg-green-200 p-1"
                 onClick={handleCalculateRoute}
