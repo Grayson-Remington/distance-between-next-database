@@ -5,6 +5,7 @@ import { api } from "~/utils/api";
 import { SignIn, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { RiPinDistanceFill } from "react-icons/ri";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useState, useEffect, useRef } from "react";
 import {
   GoogleMap,
@@ -283,12 +284,12 @@ const Home: NextPage = () => {
       </Head>
       <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
       {infoWindow && (
-        <div className="fixed left-[5%] top-[5%] z-50 h-[90%] w-[90%] rounded-xl border border-black bg-white p-8">
+        <div className=" fixed left-[50%] top-[35%] z-50 flex max-h-[450px] w-[90%] max-w-2xl -translate-x-1/2 -translate-y-1/2  flex-col rounded-xl border border-black bg-white p-8 sm:max-h-[350px]">
           <div
-            className="absolute right-2 top-2"
+            className="absolute right-2 top-2 hover:cursor-pointer"
             onClick={() => setInfoWindow(!infoWindow)}
           >
-            Close
+            <AiOutlineCloseCircle size={30} />
           </div>
           <div className="bold uppercase underline">How to use:</div>
           <ol className="flex list-decimal flex-col gap-8 p-4">
@@ -309,7 +310,10 @@ const Home: NextPage = () => {
         </div>
       )}
       <div className="fixed z-10 flex w-full items-center justify-between bg-white p-3">
-        <div className="" onClick={() => setInfoWindow(!infoWindow)}>
+        <div
+          className="rounded-full border border-black p-1 hover:cursor-pointer"
+          onClick={() => setInfoWindow(!infoWindow)}
+        >
           Info
         </div>
 
@@ -441,13 +445,6 @@ const Home: NextPage = () => {
               </div>
             </div>
             <div className="mt-12 flex justify-center gap-2">
-              {centercoords && (
-                <div>
-                  {centercoords.lat}
-                  {centercoords.lng}
-                </div>
-              )}
-
               <button
                 className=" rounded-lg border border-black bg-green-200 p-1"
                 onClick={handleCalculateRoute}
