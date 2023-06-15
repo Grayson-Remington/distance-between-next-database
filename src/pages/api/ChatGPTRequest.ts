@@ -9,7 +9,7 @@ export default async function handler(
   const lng = String(req.query.lng!);
   const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: `Can you give me a list of popular things to do at closest incorporated city to these coordinates: ${lat} ${lng}?`,
+    prompt: `What is the closest incorporated city to these coordinates: ${lat} ${lng}? Can you give me a list of 10 popular things to do at closest incorporated city to that city?`,
     temperature: 0,
     max_tokens: 300,
   });

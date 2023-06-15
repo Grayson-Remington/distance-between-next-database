@@ -239,7 +239,11 @@ const Home: NextPage = () => {
   const firstOneIndex = chatResponse.search(/1/);
   const afterOne = chatResponse.substring(firstOneIndex);
   const items = afterOne.split(/\d+\. /).slice(1);
-
+  const tenIndex = chatResponse.search(/10 Popular/) - 4;
+  const cityIndex = chatResponse.search(/coordinates/) + 15;
+  const city = chatResponse.substring(cityIndex, tenIndex);
+  console.log(cityIndex, "cityIndex");
+  console.log(city, "city");
   async function calculateRoute() {
     if (selected === null || selected2 === null) {
       return;
@@ -552,20 +556,26 @@ const Home: NextPage = () => {
                   </div>
                 )}
                 {response == "loaded" && (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-8 px-6">
                     <button
                       className="max-w-fit self-center rounded-lg border border-black bg-red-200 p-1"
                       onClick={() => setResponse("")}
                     >
                       Clear ChatGPT Response
                     </button>
-                    <div>
-                      {items.map((numberedItem: string, index: number) => (
-                        <h1 className="p-2" key={index}>
-                          {index + 1}
-                          {"."} {numberedItem}
-                        </h1>
-                      ))}
+                    <div className="flex flex-col gap-2">
+                      <div>
+                        10 Things to do around{" "}
+                        <span className="italic">{city}</span>:
+                      </div>
+                      <div>
+                        {items.map((numberedItem: string, index: number) => (
+                          <h1 className="p-2" key={index}>
+                            {index + 1}
+                            {"."} {numberedItem}
+                          </h1>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
