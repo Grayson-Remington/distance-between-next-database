@@ -321,7 +321,7 @@ const Home: NextPage = () => {
         <div className="flex gap-4 text-xl uppercase">
           <h1>Distance</h1>
           <Image
-            src="/two_points.png"
+            src="/twopoints.png"
             width={30}
             height={30}
             alt="distance between"
