@@ -298,7 +298,13 @@ const Home: NextPage = () => {
               Enter 2 locations (saved locations appear in dropdown. Sign-in to
               save locations.)
             </li>
-            <li>Click &quot;Find Directions&quot; to find the middle point</li>
+            <li>
+              Click &nbsp;
+              <button className=" rounded-lg border border-black bg-green-200 p-1">
+                Get Directions
+              </button>
+              &nbsp; to find the middle point
+            </li>
             <li>
               Below the map, Ask ChatGPT to find things to do around the
               selected point.
@@ -488,7 +494,7 @@ const Home: NextPage = () => {
               selected &&
               centercoords.lat === selected.lat &&
               centercoords.lng === selected.lng && (
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center gap-4">
                   <div>Things to do around the first location:</div>
                   {response == "" && (
                     <button
@@ -505,7 +511,7 @@ const Home: NextPage = () => {
               centercoords.lat === selected2.lat &&
               centercoords.lng === selected2.lng &&
               (!selected || selected.lat !== centercoords.lat) && (
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center gap-4">
                   <div>Things to do around the second location:</div>
                   {response == "" && (
                     <button
@@ -522,7 +528,7 @@ const Home: NextPage = () => {
               middlepoint &&
               centercoords.lat === middlepoint.lat &&
               centercoords.lng === middlepoint.lng && (
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center gap-4">
                   <div>
                     Things to do around the{" "}
                     <span className="italic">BETWEEN</span> location:
@@ -545,13 +551,24 @@ const Home: NextPage = () => {
                     <LoadingSpinner size={60} />
                   </div>
                 )}
-                {response == "loaded" &&
-                  items.map((numberedItem: string, index: number) => (
-                    <h1 className="p-2" key={index}>
-                      {index + 1}
-                      {"."} {numberedItem}
-                    </h1>
-                  ))}
+                {response == "loaded" && (
+                  <div className="flex flex-col gap-2">
+                    <button
+                      className="max-w-fit self-center rounded-lg border border-black bg-red-200 p-1"
+                      onClick={() => setResponse("")}
+                    >
+                      Clear ChatGPT Response
+                    </button>
+                    <div>
+                      {items.map((numberedItem: string, index: number) => (
+                        <h1 className="p-2" key={index}>
+                          {index + 1}
+                          {"."} {numberedItem}
+                        </h1>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
