@@ -4,8 +4,9 @@ import Image from "next/image";
 import { api } from "~/utils/api";
 import { SignIn, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
-import { RiPinDistanceFill } from "react-icons/ri";
+import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+
 import { useState, useEffect, useRef } from "react";
 import {
   GoogleMap,
@@ -284,7 +285,7 @@ const Home: NextPage = () => {
       </Head>
       <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
       {infoWindow && (
-        <div className=" fixed left-[50%] top-[35%] z-50 flex max-h-[450px] w-[90%] max-w-2xl -translate-x-1/2 -translate-y-1/2  flex-col rounded-xl border border-black bg-white p-8 sm:max-h-[350px]">
+        <div className=" fixed left-[50%] top-[50%] z-50 flex max-h-[450px] w-[90%] max-w-2xl -translate-x-1/2 -translate-y-2/3  flex-col rounded-xl border border-black bg-white p-8 sm:max-h-[350px]">
           <div
             className="absolute right-2 top-2 hover:cursor-pointer"
             onClick={() => setInfoWindow(!infoWindow)}
@@ -311,10 +312,10 @@ const Home: NextPage = () => {
       )}
       <div className="fixed z-10 flex w-full items-center justify-between bg-white p-3">
         <div
-          className="rounded-full border border-black p-1 hover:cursor-pointer"
+          className="p-1 hover:cursor-pointer"
           onClick={() => setInfoWindow(!infoWindow)}
         >
-          Info
+          <BsInfoCircle size={25} />
         </div>
 
         <div className="flex gap-4 text-xl uppercase">
