@@ -560,10 +560,6 @@ const Home: NextPage = () => {
                     </button>
                     <div className="flex flex-col gap-2">
                       <div>
-                        10 Things to do around{" "}
-                        <span className="italic">{city}</span>:
-                      </div>
-                      <div>
                         {items.map((numberedItem: string, index: number) => (
                           <h1 className="p-2" key={index}>
                             {index + 1}
