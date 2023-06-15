@@ -184,7 +184,7 @@ const Home: NextPage = () => {
   function handleFetchData() {
     fetchData()
       .catch((err) => console.error(err))
-      .then(() => console.log("this will succeed"))
+      .then()
       .catch(() => "obligatory catch");
   }
   const { isLoaded } = useLoadScript({
@@ -219,19 +219,16 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (selected) {
       setCenterCoords({ lat: selected.lat, lng: selected.lng });
-      console.log("centercoords", centercoords);
     }
   }, [selected]);
   useEffect(() => {
     if (selected2) {
       setCenterCoords({ lat: selected2.lat, lng: selected2.lng });
-      console.log("centercoords", centercoords);
     }
   }, [selected2]);
   useEffect(() => {
     if (middlepoint) {
       setCenterCoords({ lat: middlepoint.lat, lng: middlepoint.lng });
-      console.log("centercoords", centercoords);
     }
   }, [middlepoint]);
 
@@ -242,8 +239,7 @@ const Home: NextPage = () => {
   const tenIndex = chatResponse.search(/10 Popular/) - 4;
   const cityIndex = chatResponse.search(/coordinates/) + 15;
   const city = chatResponse.substring(cityIndex, tenIndex);
-  console.log(cityIndex, "cityIndex");
-  console.log(city, "city");
+
   async function calculateRoute() {
     if (selected === null || selected2 === null) {
       return;
@@ -270,7 +266,7 @@ const Home: NextPage = () => {
   function handleCalculateRoute() {
     calculateRoute()
       .catch((err) => console.error(err))
-      .then(() => console.log("this will succeed"))
+      .then()
       .catch(() => "obligatory catch");
   }
   function clearRoute() {
@@ -484,7 +480,6 @@ const Home: NextPage = () => {
               {directionsResponse && (
                 <DirectionsRenderer
                   directions={directionsResponse}
-                  onLoad={() => console.log("loaded")}
                   options={{ suppressMarkers: true }}
                 />
               )}
@@ -686,7 +681,7 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
             newValue.structured_formatting.secondary_text
           )
             .catch((err) => console.error(err))
-            .then(() => console.log("this will succeed"))
+            .then()
             .catch(() => "obligatory catch");
         }
       }}
