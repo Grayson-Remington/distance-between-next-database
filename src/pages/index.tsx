@@ -274,6 +274,7 @@ const Home: NextPage = () => {
     setCenterCoords(null);
     setSelected(null);
     setSelected2(null);
+    setMiddlePoint(null);
   }
 
   return (
@@ -301,7 +302,7 @@ const Home: NextPage = () => {
             <li>
               Click &nbsp;
               <button className=" rounded-lg border border-black bg-green-200 p-1">
-                Get Directions
+                Find <span className="uppercase italic">Between</span>
               </button>
               &nbsp; to find the middle point
             </li>
@@ -456,13 +457,13 @@ const Home: NextPage = () => {
                 className=" rounded-lg border border-black bg-green-200 p-1"
                 onClick={handleCalculateRoute}
               >
-                Get Route
+                Find <span className="uppercase italic">Between</span>
               </button>
               <button
                 className="rounded-lg border border-black bg-red-200 p-1"
                 onClick={clearRoute}
               >
-                Clear Route
+                Clear Locations
               </button>
             </div>
           </div>
@@ -479,7 +480,7 @@ const Home: NextPage = () => {
                   label={{
                     text: "First Location",
                     className:
-                      "bg-white p-2 absolute top-4 border border-black",
+                      "bg-white p-2 absolute top-4 border border-black rounded-lg",
                     fontWeight: "bold",
                     fontSize: "11px",
 
@@ -495,7 +496,7 @@ const Home: NextPage = () => {
                   label={{
                     text: "Second Location",
                     className:
-                      "bg-white p-2 absolute top-4 border border-black",
+                      "bg-white p-2 absolute top-4 border border-black rounded-lg",
                     fontWeight: "bold",
                     fontSize: "11px",
 
@@ -507,9 +508,9 @@ const Home: NextPage = () => {
                 <MarkerF
                   position={middlepoint}
                   label={{
-                    text: "Middle Point",
+                    text: "Between",
                     className:
-                      "bg-white p-2 absolute top-4 border border-black",
+                      "bg-white p-2 absolute top-4 border border-black italic uppercase rounded-lg",
                     fontWeight: "bold",
                     fontSize: "11px",
 
