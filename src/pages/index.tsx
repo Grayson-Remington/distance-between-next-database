@@ -456,13 +456,13 @@ const Home: NextPage = () => {
                 className=" rounded-lg border border-black bg-green-200 p-1"
                 onClick={handleCalculateRoute}
               >
-                Get Directions
+                Get Route
               </button>
               <button
                 className="rounded-lg border border-black bg-red-200 p-1"
                 onClick={clearRoute}
               >
-                Clear Directions
+                Clear Route
               </button>
             </div>
           </div>
@@ -473,9 +473,50 @@ const Home: NextPage = () => {
               mapContainerClassName="flex lg:w-[500px] lg:h-[500px] md:w-[400px] md:h-[400px] w-[300px] h-[300px]"
               onLoad={(map) => setMap(map)}
             >
-              {selected && <MarkerF position={selected}>Hello</MarkerF>}
-              {selected2 && <MarkerF position={selected2} />}
-              {middlepoint && <MarkerF position={middlepoint} />}
+              {selected && (
+                <MarkerF
+                  position={selected}
+                  label={{
+                    text: "First Location",
+                    className:
+                      "bg-white p-2 absolute top-4 border border-black",
+                    fontWeight: "bold",
+                    fontSize: "11px",
+
+                    color: "black",
+                  }}
+                >
+                  Hello
+                </MarkerF>
+              )}
+              {selected2 && (
+                <MarkerF
+                  position={selected2}
+                  label={{
+                    text: "Second Location",
+                    className:
+                      "bg-white p-2 absolute top-4 border border-black",
+                    fontWeight: "bold",
+                    fontSize: "11px",
+
+                    color: "black",
+                  }}
+                />
+              )}
+              {middlepoint && (
+                <MarkerF
+                  position={middlepoint}
+                  label={{
+                    text: "Middle Point",
+                    className:
+                      "bg-white p-2 absolute top-4 border border-black",
+                    fontWeight: "bold",
+                    fontSize: "11px",
+
+                    color: "black",
+                  }}
+                />
+              )}
 
               {directionsResponse && (
                 <DirectionsRenderer
